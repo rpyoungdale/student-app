@@ -8,7 +8,7 @@
 
 {% for student in students %}
   <p>
-    {{student.first_name}} {{student.last_name}}
+    <a href="{{url_for('show', id=student.id)}}">{{student.first_name}} {{student.last_name}}</a>
   </p>
 {% endfor %}
 

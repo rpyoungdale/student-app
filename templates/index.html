@@ -9,6 +9,9 @@
 {% for student in students %}
   <p>
     <a href="{{url_for('show', id=student.id)}}">{{student.first_name}} {{student.last_name}}</a>
+    <form action="{{url_for('show', id=student.id)}}?_method=DELETE" method="post">
+      <input type="submit" value="Delete">
+    </form>
   </p>
 {% endfor %}
 

@@ -1,7 +1,10 @@
 from flask import Flask, request, redirect, url_for, render_template
+from flask_modus import Modus
 from student import Student
 
+
 app = Flask(__name__)
+modus = Modus(app) # method overriding.....gives you the ability to override the default method i.e post => patch
 
 students = []
 
@@ -24,18 +27,24 @@ def index():
 def new():
     return render_template('new.html')
 
-@app.route('/students/<int:id>') # this changes the id from a string to an int
+@app.route('/students/<int:id>', methods=['GET', 'PATCH', 'DELETE']) # this changes the id from a string to an int
 def show(id):
     found_student = find_student(id)
-    # for student in students:
-    #     if(student.id == id):
-    #         found_student = student
+    # from IPython import embed; embed()
+    if request.method == 'PATCH':
+        found_student.first_name = request.form['first_name']
+        found_student.last_name = request.form['last_name']
+        return redirect(url_for('index'))
+    if request.method == 'DELETE':
+        students.remove(found_student)
+        return redirect(url_for('index'))
     return render_template('show.html', student=found_student)
 
 @app.route('/students/<int:id>/edit')
 def edit(id):
     found_student = find_student(id)
     return render_template('edit.html', student=found_student)
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=3000)
